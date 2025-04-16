@@ -9,14 +9,16 @@ with an integrated playtime system, the script controls online players by adding
 
 Each acquired skill card, has an export, by default, `vlab_perks`, has 8 skill cards:
 
-```- slippery_bastard
+```
+- slippery_bastard
 - a_moment_to_recuperate
 - quite_an_inspiration
 - sharpshooter
 - strange_medicine
 - the_unblinking_eye
 - gunslingers_choice
-- take_the_pain_away```
+- take_the_pain_away
+```
 
 The skill card: "`quite_an_inspiration`" is already present inside the script and when a player has it, the process to gain points will be speeded up.
 
@@ -41,7 +43,8 @@ You can disable their display by commenting the skill you do not want to display
 
 Make sure the skills on `vorp_core` have 10 default levels like in this case:
 
-```Weapons = {
+```
+Weapons = {
  Levels = {
  {
  NextLevel = 100,
@@ -84,7 +87,8 @@ NextLevel = 50000,
 Label = "Expert VI",
 }
 },
-},```
+},
+```
 
 **Set the experience needed to reach the next level and the skill label as you see fit.**
 
@@ -94,7 +98,8 @@ You can add new skills, make sure to add them in both config files and add your 
 
 Make sure in `vlab_perks` config:
 
-```Config.Skills = {
+```
+Config.Skills = {
 {
 skillName = "Weapons",
 skillLabel = "Gunslinger",
@@ -106,13 +111,15 @@ rewardName = "coal",
 RewardLabel = "Coal",
 amount = "1",
 },
-...```
+...
+```
 
 The **skillName** is entered and has the same name inside **Config.Skills** in "`vorp_core/config/skills.lua`"
 
 **Add rewards for each level reached:**
 
-```Config.Skills = {
+```
+Config.Skills = {
 {
 skillName = "Weapons", -- The name of the skill that should match on vorp_core
 skillLabel = "Gunslinger", -- Skill name translation in vlab_perks interface
@@ -124,7 +131,8 @@ rewardName = "coal", -- Reward name, make sure it is in database if "item"
 RewardLabel = "Coal", -- Reward translation in vlab_perks interface
 amount = "1", -- Reward amount obtained.
 },
-...```
+...
+```
 
 *To create new resources that are compatible with the vorp API, follow the documentation: *https://docs.vorp-core.com/api-reference/core
 
@@ -139,25 +147,30 @@ You can find the skill cards here: https://github.com/femga/rdr3_discoveries/tre
 
 - 2) Add the new card in the **config.lua** `Config.Perks`
 
-```{
+```
+{
 icon = "image", -- name of the image .png
 label = "label", -- display name of the new card
 desc = "description", -- description of the new card
 funcs = "new_perk", -- name of the card that we are going to insert into the database and in the exports
 point = 110, -- points needed to acquire the new card
 money = 850 -- money needed to acquire the new card
-},```
+},
+```
 
 3) - We add the new skill in the database, adding this query in the database:
 
-````ALTER TABLE `vlab_perks`
-ADD COLUMN `new_perk` TINYINT(1) NOT NULL DEFAULT 0 AFTER `take_the_pain_away`;```
+```
+`ALTER TABLE `vlab_perks`
+ADD COLUMN `new_perk` TINYINT(1) NOT NULL DEFAULT 0 AFTER `take_the_pain_away`;
+```
 
 "**new_perk**" will be the name of the new skill card, which must match the **funcs** in **config.lua**.
 
 - 4) Search in the path `server/server.lua` for this function: "**GetAcquiredPerksByCharId**" copy this:
 
-```local function GetAcquiredPerksByCharId(charId, cb)
+```
+local function GetAcquiredPerksByCharId(charId, cb)
  exports.oxmysql:fetch(
  "SELECT slippery_bastard, a_moment_to_recuperate, quite_an_inspiration, sharpshooter, strange_medicine, the_unblinking_eye, gunslingers_choice, take_the_pain_away FROM vlab_perks WHERE charId = @charId",
  { ['@charId'] = charId },
@@ -187,11 +200,13 @@ local allowedPerkColumns = {
  the_unblinking_eye = true,
  gunslingers_choice = true,
  take_the_pain_away = true
-}```
+}
+```
 
 Add the "**new_perk**":
 
-```local function GetAcquiredPerksByCharId(charId, cb)
+```
+local function GetAcquiredPerksByCharId(charId, cb)
  exports.oxmysql:fetch(
  "SELECT slippery_bastard, a_moment_to_recoverate, quite_an_inspiration, sharpshooter, strange_medicine, the_unblinking_eye, gunslingers_choice, take_the_pain_away, new_perk FROM vlab_perks WHERE charId = @charId",
  { ['@charId'] = charId },
@@ -222,7 +237,8 @@ local allowedPerkColumns = {
  gunslingers_choice = true,
  take_the_pain_away = true,
  new_perk = true
-}```
+}
+```
 
 **It is important to know the export to check if a player has the acquired perk.**
 
@@ -232,13 +248,17 @@ local allowedPerkColumns = {
 
 - Example
 
-```exports.vlab_perks:HasAcquiredPerk(charId, "new_perk", function(hasPerk)
+```
+exports.vlab_perks:HasAcquiredPerk(charId, "new_perk", function(hasPerk)
  if hasPerk then
  print("The charId " .. charId .. " has acquired the perk 'new_perk'.")
  else
  print("The charId " .. charId .. " has NOT acquired the 'new_perk' perk.")
  end
-end)```**If you want to add a new skill card, make sure you know what you're doing first!**
+end)
+```
+
+**If you want to add a new skill card, make sure you know what you're doing first!**
 
 Follow these steps:
 
@@ -247,25 +267,30 @@ You can find the skill cards here: https://github.com/femga/rdr3_discoveries/tre
 
 - 2) Add the new card in the **config.lua** `Config.Perks`
 
-```{
+```
+{
 icon = "image", -- name of the image .png
 label = "label", -- display name of the new card
 desc = "description", -- description of the new card
 funcs = "new_perk", -- name of the card that we are going to insert into the database and in the exports
 point = 110, -- points needed to acquire the new card
 money = 850 -- money needed to acquire the new card
-},```
+},
+```
 
 3) - We add the new skill in the database, adding this query in the database:
 
-````ALTER TABLE `vlab_perks`
-ADD COLUMN `new_perk` TINYINT(1) NOT NULL DEFAULT 0 AFTER `take_the_pain_away`;```
+```
+`ALTER TABLE `vlab_perks`
+ADD COLUMN `new_perk` TINYINT(1) NOT NULL DEFAULT 0 AFTER `take_the_pain_away`;
+```
 
 "**new_perk**" will be the name of the new skill card, which must match the **funcs** in **config.lua**.
 
 - 4) Search in the path `server/server.lua` for this function: "**GetAcquiredPerksByCharId**" copy this:
 
-```local function GetAcquiredPerksByCharId(charId, cb)
+```
+local function GetAcquiredPerksByCharId(charId, cb)
  exports.oxmysql:fetch(
  "SELECT slippery_bastard, a_moment_to_recuperate, quite_an_inspiration, sharpshooter, strange_medicine, the_unblinking_eye, gunslingers_choice, take_the_pain_away FROM vlab_perks WHERE charId = @charId",
  { ['@charId'] = charId },
@@ -295,11 +320,13 @@ local allowedPerkColumns = {
  the_unblinking_eye = true,
  gunslingers_choice = true,
  take_the_pain_away = true
-}```
+}
+```
 
 Add the "**new_perk**":
 
-```local function GetAcquiredPerksByCharId(charId, cb)
+```
+local function GetAcquiredPerksByCharId(charId, cb)
  exports.oxmysql:fetch(
  "SELECT slippery_bastard, a_moment_to_recoverate, quite_an_inspiration, sharpshooter, strange_medicine, the_unblinking_eye, gunslingers_choice, take_the_pain_away, new_perk FROM vlab_perks WHERE charId = @charId",
  { ['@charId'] = charId },
@@ -330,7 +357,8 @@ local allowedPerkColumns = {
  gunslingers_choice = true,
  take_the_pain_away = true,
  new_perk = true
-}```
+}
+```
 
 **It is important to know the export to check if a player has the acquired perk.**
 
@@ -340,13 +368,15 @@ local allowedPerkColumns = {
 
 - Example
 
-```exports.vlab_perks:HasAcquiredPerk(charId, "new_perk", function(hasPerk)
+```
+exports.vlab_perks:HasAcquiredPerk(charId, "new_perk", function(hasPerk)
  if hasPerk then
  print("The charId " .. charId .. " has acquired the perk 'new_perk'.")
  else
  print("The charId " .. charId .. " has NOT acquired the 'new_perk' perk.")
  end
-end)```
+end)
+```
 
 # Exports
 
@@ -388,12 +418,14 @@ end)```
 
 - Example
 
-```exports.vlab_perks:GetAcquiredPerksByCharId(charId, function(acquired)
+```
+exports.vlab_perks:GetAcquiredPerksByCharId(charId, function(acquired)
  print("Perks gained for charId " .. charId .. ":")
  for _, perk in ipairs(acquired) do
  print(perk)
  end
-end)```
+end)
+```
 
 - Export to check if the charID has acquired a perk specification
 
@@ -401,25 +433,29 @@ end)```
 
 - Example
 
-```exports.vlab_perks:HasAcquiredPerk(charId, "sharpshooter", function(hasPerk)
+```
+exports.vlab_perks:HasAcquiredPerk(charId, "sharpshooter", function(hasPerk)
  if hasPerk then
  print("The charId " .. charId .. " has acquired the perk 'sharpshooter'.")
  else
  print("The charId " .. charId .. " has NOT acquired the 'sharpshooter' perk.")
  end
-end)```
+end)
+```
 
 - Perks available:
 
-```slippery_bastard
-slippery_bastard
-a_moment_to_recover
-quite_an_inspiration
-sharpshooter
-strange_medicine
-the_unblinking_eye
-gunslingers_choice
-take_the_pain_away```
+```
+- slippery_bastard
+- slippery_bastard
+- a_moment_to_recover
+- quite_an_inspiration
+- sharpshooter
+- strange_medicine
+- the_unblinking_eye
+- gunslingers_choice
+- take_the_pain_away
+```
 
 - Export to add EXP to charID
 
