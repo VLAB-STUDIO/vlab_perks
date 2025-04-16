@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>VLAB Perks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="perk-container" class="hidden">
+        <div id="top-box">
+            <img id="main-perk-icon" src="img/ability_card.png" alt="Abilità">
+            <div id="main-perk-desc">Ability</div>
+        </div>
+        <img id="discord-avatar" class="discord-avatar" src="" alt="Discord Avatar">
+        <div id="player-info" class="player-info">
+            <p id="player-name"></p>
+            <p id="player-job"></p>
+            <p id="player-age"></p>
+        </div>
+        <div id="perk-content">
+            <div class="perks-cards-scroll" id="perks-scroll-container">
+            </div>
+        </div>
+    
+        <button id="close-btn" onclick="closeUI()"></button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
