@@ -7,9 +7,9 @@ Config.OpenCommand = "skill"
 Config.OpenWithKey = true
 Config.OpenButton  = 0x446258B6 -- [PAGEUP]
 
-Config.DiscordAvatar = true
-Config.guildId = "942189965851369522"
-Config.DiscordToken = "MTA5ODk3MjY2NDMyNjAwNDc1OA.Gz6MUr.IVjMwJuhsWH9kZHAIxWbuqV36L4zbSC9FiXM_M"
+Config.DiscordAvatar = false
+Config.guildId = ""
+Config.DiscordToken = ""
 
 Config.EXP = {
     IncreaseTime    = 180000, -- 3 mins
