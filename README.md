@@ -142,10 +142,10 @@ amount = "1", -- Reward amount obtained.
 
 Follow these steps:
 
-- 1) Add the image of the skill card in the path: `vlab_perks\html\img`
+- Add the image of the skill card in the path: `vlab_perks\html\img`
 You can find the skill cards here: https://github.com/femga/rdr3_discoveries/tree/master/useful_info_from_rpfs/textures/ui_textures_mp____part1
 
-- 2) Add the new card in the **config.lua** `Config.Perks`
+- Add the new card in the **config.lua** `Config.Perks`
 
 ```
 {
@@ -158,7 +158,7 @@ money = 850 -- money needed to acquire the new card
 },
 ```
 
-3) - We add the new skill in the database, adding this query in the database:
+- We add the new skill in the database, adding this query in the database:
 
 ```
 `ALTER TABLE `vlab_perks`
@@ -167,7 +167,7 @@ ADD COLUMN `new_perk` TINYINT(1) NOT NULL DEFAULT 0 AFTER `take_the_pain_away`;
 
 "**new_perk**" will be the name of the new skill card, which must match the **funcs** in **config.lua**.
 
-- 4) Search in the path `server/server.lua` for this function: "**GetAcquiredPerksByCharId**" copy this:
+- Search in the path `server/server.lua` for this function: "**GetAcquiredPerksByCharId**" copy this:
 
 ```
 local function GetAcquiredPerksByCharId(charId, cb)
@@ -262,10 +262,10 @@ end)
 
 Follow these steps:
 
-- 1) Add the image of the skill card in the path: `vlab_perks\html\img`
+-  Add the image of the skill card in the path: `vlab_perks\html\img`
 You can find the skill cards here: https://github.com/femga/rdr3_discoveries/tree/master/useful_info_from_rpfs/textures/ui_textures_mp____part1
 
-- 2) Add the new card in the **config.lua** `Config.Perks`
+-  Add the new card in the **config.lua** `Config.Perks`
 
 ```
 {
@@ -278,7 +278,7 @@ money = 850 -- money needed to acquire the new card
 },
 ```
 
-3) - We add the new skill in the database, adding this query in the database:
+- We add the new skill in the database, adding this query in the database:
 
 ```
 `ALTER TABLE `vlab_perks`
@@ -287,7 +287,7 @@ ADD COLUMN `new_perk` TINYINT(1) NOT NULL DEFAULT 0 AFTER `take_the_pain_away`;
 
 "**new_perk**" will be the name of the new skill card, which must match the **funcs** in **config.lua**.
 
-- 4) Search in the path `server/server.lua` for this function: "**GetAcquiredPerksByCharId**" copy this:
+-  Search in the path `server/server.lua` for this function: "**GetAcquiredPerksByCharId**" copy this:
 
 ```
 local function GetAcquiredPerksByCharId(charId, cb)
