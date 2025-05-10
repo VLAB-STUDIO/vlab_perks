@@ -316,19 +316,12 @@ AddEventHandler("vlab_perks:acquirePerk", function(perkColumn, pointCost, moneyC
     end
 
     local user = Core.getUser(src)
-    if not user then
-        return
-    end
-
+    if not user then return end
     local character = user.getUsedCharacter
-    if not character then
-        return
-    end
+    if not character then return end
 
     local charId = character.charIdentifier
-    if not charId then
-        return
-    end
+    if not charId then return end
 
     local currentMoney = tonumber(character.money) or 0
 
@@ -336,34 +329,56 @@ AddEventHandler("vlab_perks:acquirePerk", function(perkColumn, pointCost, moneyC
         if hasPerk then
             TriggerClientEvent("vlab_perks:acquirePerkResult", src, false, "Perk already acquired!")
             return
-        else
-            exports.vlab_perks:GetPointsByCharId(charId, function(points)
-                if points < pointCost then
-                    TriggerClientEvent("vlab_perks:acquirePerkResult", src, false, T.NoPoints)
-                    TriggerClientEvent('vorp:TipBottom', src, "~e~"..T.NoPoints, 4000)
-                elseif currentMoney < moneyCost then
-                    TriggerClientEvent("vlab_perks:acquirePerkResult", src, false, T.NoMoney)
-                    TriggerClientEvent('vorp:TipBottom', src, "~e~"..T.NoMoney, 4000)
-                else
-                    exports.vlab_perks:RemovePointsByCharId(charId, pointCost)
-                    TriggerEvent("vorp:removeMoney", src, 0, moneyCost)
-                    local query = "UPDATE vlab_perks SET " .. perkColumn .. " = 1 WHERE charId = @charId"
-                    exports.oxmysql:execute(query, { ['@charId'] = charId }, function(result)
-                        if result and result.affectedRows and result.affectedRows > 0 then
-                            TriggerClientEvent("vlab_perks:acquirePerkResult", src, true, "Perk acquired!")
-                            exports.vlab_perks:GetPointsByCharId(charId, function(newPoints)
-                                TriggerClientEvent("vlab_perks:updatePoints", src, newPoints)
-                            end)
-                            exports.vlab_perks:GetAcquiredPerksByCharId(charId, function(acquired)
-                                TriggerClientEvent("vlab_perks:sendAcquiredPerks", src, acquired)
-                            end)
-                        else
-                            TriggerClientEvent("vlab_perks:acquirePerkResult", src, false, "Error acquiring perk!")
+        end
+
+        exports.vlab_perks:GetPointsByCharId(charId, function(points)
+            if points < pointCost then
+                TriggerClientEvent("vlab_perks:acquirePerkResult", src, false, T.NoPoints)
+                TriggerClientEvent('vorp:TipBottom', src, "~e~"..T.NoPoints, 4000)
+                return
+            elseif currentMoney < moneyCost then
+                TriggerClientEvent("vlab_perks:acquirePerkResult", src, false, T.NoMoney)
+                TriggerClientEvent('vorp:TipBottom', src, "~e~"..T.NoMoney, 4000)
+                return
+            end
+
+            exports.vlab_perks:RemovePointsByCharId(charId, pointCost)
+            TriggerEvent("vorp:removeMoney", src, 0, moneyCost)
+
+            local query = "UPDATE vlab_perks SET " .. perkColumn .. " = 1 WHERE charId = @charId"
+            exports.oxmysql:execute(query, { ['@charId'] = charId }, function(result)
+                if not (result and result.affectedRows > 0) then
+                    TriggerClientEvent("vlab_perks:acquirePerkResult", src, false, "Error acquiring perk!")
+                    return
+                end
+
+                TriggerClientEvent("vlab_perks:acquirePerkResult", src, true, "Perk acquired!")
+                exports.vlab_perks:GetPointsByCharId(charId, function(newPoints)
+                    TriggerClientEvent("vlab_perks:updatePoints", src, newPoints)
+                end)
+                exports.vlab_perks:GetAcquiredPerksByCharId(charId, function(acquired)
+                    TriggerClientEvent("vlab_perks:sendAcquiredPerks", src, acquired)
+                end)
+
+                if perkColumn == "slippery_bastard" then
+                    exports.oxmysql:execute([[
+                        UPDATE characters
+                        SET slots = slots * 2
+                        WHERE charidentifier = @charId
+                    ]], { ['@charId'] = charId }, function(slotRes)
+                        if not (slotRes and slotRes.affectedRows > 0) then
+                            print(("vlab_perks: errore raddoppio slots DB per charId %s"):format(charId))
+                            return
                         end
+
+                        local currentSlots = tonumber(character.invCapacity) or 0
+                        character.updateInvCapacity(currentSlots)
+                        local newSlots = currentSlots * 2
+                        TriggerClientEvent('vorp:TipBottom', src, "Doubled Slots: " .. newSlots, 4000)
                     end)
                 end
             end)
-        end
+        end)
     end)
 end)
 
